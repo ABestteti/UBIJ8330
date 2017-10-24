@@ -56,7 +56,7 @@ public class UBILotesEsocialDAO {
 		return uble;
 	}
 	
-	public List<UBILotesEsocial> listUBILotesEsocial() {
+	public List<UBILotesEsocial> listUBILotesEsocial(StatusLotesEventosEnum pStatus) {
 		PreparedStatement stmt             = null;
 		List<UBILotesEsocial> listaUBILotesEsocial = new ArrayList<UBILotesEsocial>();
 		
@@ -64,7 +64,7 @@ public class UBILotesEsocialDAO {
 			stmt = conn.prepareStatement(
 					"SELECT uble.ubi_lote_numero,uble.status,uble.rowid FROM ubi_lotes_esocial uble WHERE uble.status = ?");
 			
-			stmt.setInt(1, StatusLotesEventosEnum.A_ENVIAR.getId());
+			stmt.setInt(1, pStatus.getId());
 			
 			ResultSet rs = stmt.executeQuery();
 			

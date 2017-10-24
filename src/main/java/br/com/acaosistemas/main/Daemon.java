@@ -25,7 +25,7 @@ public class Daemon {
 			System.out.println(Versao.ver()+"\n");
 			System.out.println("Quantidade de parametros insuficientes.");
 			System.out.println("Utilize o comando abaixo para executar a aplicacao, utilizando o Java 1.8 ou superior:");
-			System.out.println("java -jar UBIJ8320.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
+			System.out.println("java -jar UBIJ8330.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
 			System.exit(1);
 		}
 		
@@ -62,14 +62,14 @@ public class Daemon {
 		// Objects de acesso as tabelas do banco de dados
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
 		
-		pipeName = runtimeDAO.getRuntimeValue("PIPEUBIASSEVT");
+		pipeName = runtimeDAO.getRuntimeValue("PIPEUBILOTE");
 		runtimeDAO.closeConnection();
 		
 		// Abre conexao com o banco para leitura do pipe do
 		// banco de dados.
 		conn = new ConnectionFactory().getConnection();
 		
-		System.out.println("Processando registros dos correios...");
+		System.out.println("Processando registros do lote de eventos...");
 		
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
@@ -157,7 +157,8 @@ public class Daemon {
 			
 			// Inicia o processo de leitura dos registros da tabela de stage
 			// cujo status seja A_ASSINAR (201)
-			new ProcessarLotesEventos().lerRegistrosNaoProcessados();
+			new ProcessarLotesEventos().lerLotesProntosEnvio();
+			new ProcessarLotesEventos().lerLotesProntosConsulta();
 		}
 		
 		try {

@@ -18,6 +18,7 @@ import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.db.model.UBILotesEsocialLog;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
+import br.com.acaosistemas.wsclientes.ClienteWSConsultarLote;
 import br.com.acaosistemas.wsclientes.ClienteWSEnviarLote;
 
 public class ProcessarLotesEventos {
@@ -25,15 +26,15 @@ public class ProcessarLotesEventos {
 	public ProcessarLotesEventos() {
 	}
 
-	public void lerRegistrosNaoProcessados() {
+	public void lerLotesProntosEnvio() {
 		ClienteWSEnviarLote   clientWS            = new ClienteWSEnviarLote();
 		UBILotesEsocialDAO    ubleDAO             = new UBILotesEsocialDAO();
 		List<UBILotesEsocial> listaUbiLoteEventos = new ArrayList<UBILotesEsocial>();
 		UBILotesEsocialLog    ubll                = new UBILotesEsocialLog();
 		
-		listaUbiLoteEventos = ubleDAO.listUBILotesEsocial();
+		listaUbiLoteEventos = ubleDAO.listUBILotesEsocial(StatusLotesEventosEnum.A_ENVIAR);
 				
-		System.out.println("   Processando registros da UBI_LOTES_ESOCIAL...");
+		System.out.println("   Processando registros da UBI_LOTES_ESOCIAL[Envio]...");
 		
 		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
 			
@@ -82,7 +83,67 @@ public class ProcessarLotesEventos {
 		}
 		
 		ubleDAO.closeConnection();
-		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL.");
+		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Envio].");
+	}
+	
+	public void lerLotesProntosConsulta() {
+		ClienteWSConsultarLote clientWS            = new ClienteWSConsultarLote();
+		UBILotesEsocialDAO     ubleDAO             = new UBILotesEsocialDAO();
+		List<UBILotesEsocial>  listaUbiLoteEventos = new ArrayList<UBILotesEsocial>();
+		UBILotesEsocialLog     ubll                = new UBILotesEsocialLog();
+		
+		listaUbiLoteEventos = ubleDAO.listUBILotesEsocial(StatusLotesEventosEnum.A_CONSULTAR);
+				
+		System.out.println("   Processando registros da UBI_LOTES_ESOCIAL[Consulta]...");
+		
+		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
+			
+			System.out.println("     Processando rowId: "+ubleRow.getRowId());
+				
+			try {
+				clientWS.execWebService(ubleRow);
+				
+				// Atualiza o status da tabela UBI_POBOX_XML para
+				// ENVIADO_COM_SUCESSO (298)
+				ubleRow.setStatus(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO);
+				ubleDAO.updateStatus(ubleRow);
+				
+				// Insere no log o resultado da chamada do web service
+				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());
+				ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
+				ubll.setMensagem(Versao.getStringVersao() +
+						         "\n"                     +
+						         StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO.getDescricao());
+				ubll.setStatus(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO);
+				ubll.setNumErro(0L);
+				
+				UBILotesEsocialLogDAO ubllDAO = new UBILotesEsocialLogDAO();				
+				ubllDAO.insert(ubll);
+				ubllDAO.closeConnection();
+				
+			} catch (MalformedURLException e) {
+				// Caso a chamada do web service do correio retornar a excecao
+				// MalformedURLException, faz a atualizacao do status com o
+		        // valor apropriado.
+				ubleRow.setStatus(StatusLotesEventosEnum.ERRO_CONSULTA_IRRECUPERAVEL);
+				gravaExcecaoLog(ubleRow, e);
+			} catch (SocketTimeoutException e) {
+				// Caso a chamada do web service do correio retornar a excecao
+				// IOException, faz a atualizacao do status com o
+		        // valor apropriado
+				ubleRow.setStatus(StatusLotesEventosEnum.ERRO_CONSULTA_IRRECUPERAVEL);
+				gravaExcecaoLog(ubleRow, e);
+			} catch (IOException e) {
+				// Caso a chamada do web service do correio retornar a excecao
+				// IOException, faz a atualizacao do status com o
+		        // valor apropriado
+				ubleRow.setStatus(StatusLotesEventosEnum.ERRO_CONSULTA_IRRECUPERAVEL);
+				gravaExcecaoLog(ubleRow, e);
+			}
+		}
+		
+		ubleDAO.closeConnection();
+		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Consulta].");
 	}
 	
 	private void gravaExcecaoLog(UBILotesEsocial pUbleRow, Exception pException) {
