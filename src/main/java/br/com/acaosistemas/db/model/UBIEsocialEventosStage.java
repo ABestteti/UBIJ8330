@@ -3,7 +3,7 @@ package br.com.acaosistemas.db.model;
 import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
-import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
+import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 
 /**
  * Entidade representando tabela UBI_ESOCIAL_EVENTOS_STAGE
@@ -14,7 +14,7 @@ public class UBIEsocialEventosStage {
 	
     private Timestamp  dtMov;
     private SimNaoEnum xmlAssinado;
-    private StatusEsocialEventosStageEnum status;
+    private StatusLotesEventosEnum status;
     private String rowId;
     
 	public Timestamp getDtMov() {
@@ -41,11 +41,11 @@ public class UBIEsocialEventosStage {
 		this.rowId = rowId;
 	}
 
-	public StatusEsocialEventosStageEnum getStatus() {
+	public StatusLotesEventosEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusEsocialEventosStageEnum status) {
+	public void setStatus(StatusLotesEventosEnum status) {
 		this.status = status;
 	}
 }

@@ -11,86 +11,87 @@ import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
+import br.com.acaosistemas.db.model.UBILotesEsocial;
 
-public class UBIEsocialEventosStageDAO {
 
-	private Connection             conn;
-	private UBIEsocialEventosStage ubes;
+public class UBILotesEsocialDAO {
+
+	private Connection      conn;
+	private UBILotesEsocial uble;
 	
-	public UBIEsocialEventosStageDAO() {
+	public UBILotesEsocialDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
-
+	
 	public void closeConnection () {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public UBIEsocialEventosStage getUBIEsocialEventosStage(String pRowID) {
-		ubes = new UBIEsocialEventosStage();
+	public UBILotesEsocial getUBILotesEsocial(String pRowID ) {
+		uble = new UBILotesEsocial();
 		
 		PreparedStatement stmt = null;
 		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT ubes.dt_mov FROM ubi_eventos_esocial_stage ubes WHERE ubes.rowid = ?");
+					"SELECT uble.ubi_lote_numero,uble.status FROM ubi_lotes_esocial uble WHERE uble.rowid = ?");
 			
 			stmt.setString(1, pRowID);
 			
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				ubes.setDtMov(rs.getTimestamp("dt_mov"));
+				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
+				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
+				uble.setRowId(pRowID);
 			}
-			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}
-		return ubes;
+		}		
+		
+		return uble;
 	}
 	
-	public List<UBIEsocialEventosStage> listUBIEsocialEventosStage() {
+	public List<UBILotesEsocial> listUBILotesEsocial() {
 		PreparedStatement stmt             = null;
-		List<UBIEsocialEventosStage> listaUBIEsocialEventosStage = new ArrayList<UBIEsocialEventosStage>();
-	
+		List<UBILotesEsocial> listaUBILotesEsocial = new ArrayList<UBILotesEsocial>();
+		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT ubes.dt_mov, ubes.status, ubes.xml_assinado, ubes.rowid FROM ubi_eventos_esocial_stage ubes WHERE ubes.status = ?");
+					"SELECT uble.ubi_lote_numero,uble.status,uble.rowid FROM ubi_lotes_esocial uble WHERE uble.status = ?");
 			
 			stmt.setInt(1, StatusLotesEventosEnum.A_ENVIAR.getId());
 			
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				UBIEsocialEventosStage ubes = new UBIEsocialEventosStage();
+				UBILotesEsocial uble = new UBILotesEsocial();
 				
-				ubes.setRowId(rs.getString("rowId"));
-				ubes.setDtMov(rs.getTimestamp("dt_mov"));
-				ubes.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
-				ubes.setXmlAssinado(SimNaoEnum.getById(rs.getString("xml_assinado")));
+				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
+				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
+				uble.setRowId(rs.getString("rowId"));
 				
-				listaUBIEsocialEventosStage.add(ubes);
+				listaUBILotesEsocial.add(uble);
 			}
-
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		return listaUBIEsocialEventosStage;
+		return listaUBILotesEsocial;
 	}
 	
-	public void updateStatus(UBIEsocialEventosStage pUbesRow) {
+	public void updateStatus(UBILotesEsocial pUbleRow) {
 		PreparedStatement stmt = null;
 		
 		try {
 			stmt = conn.prepareStatement(
-					"UPDATE ubi_eventos_esocial_stage ubes SET ubes.status = ? WHERE ubes.rowid = ?");
+					"UPDATE ubi_lotes_esocial uble SET uble.status = ? WHERE uble.rowid = ?");
 		
-			stmt.setInt(1, pUbesRow.getStatus().getId());
-			stmt.setString(2, pUbesRow.getRowId());
+			stmt.setInt(1, pUbleRow.getStatus().getId());
+			stmt.setString(2, pUbleRow.getRowId());
 			
 			stmt.execute();
 			stmt.close();

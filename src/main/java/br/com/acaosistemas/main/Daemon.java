@@ -157,7 +157,7 @@ public class Daemon {
 			
 			// Inicia o processo de leitura dos registros da tabela de stage
 			// cujo status seja A_ASSINAR (201)
-			new ProcessarEventosStage().lerRegistrosNaoProcessados();
+			new ProcessarLotesEventos().lerRegistrosNaoProcessados();
 		}
 		
 		try {

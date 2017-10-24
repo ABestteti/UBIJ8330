@@ -4,25 +4,32 @@ import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 
-public class UBIEsocialEventosStageLog {
-
-	private Timestamp dtMov;
-	private Timestamp ubesDtMov;
-	private String    mensagem;
-	private StatusLotesEventosEnum status;
-	private Long      numErro;
+public class UBILotesEsocialLog {
 	
+	private Long ubleUbiLoteNumero;
+	private Timestamp dtMov;
+	private Long numErro;
+	private String mensagem;
+	private StatusLotesEventosEnum status;
+	private String rowId;
+	
+	public Long getUbleUbiLoteNumero() {
+		return ubleUbiLoteNumero;
+	}
+	public void setUbleUbiLoteNumero(Long ubleUbiLoteNumero) {
+		this.ubleUbiLoteNumero = ubleUbiLoteNumero;
+	}
 	public Timestamp getDtMov() {
 		return dtMov;
 	}
 	public void setDtMov(Timestamp dtMov) {
 		this.dtMov = dtMov;
 	}
-	public Timestamp getUbesDtMov() {
-		return ubesDtMov;
+	public Long getNumErro() {
+		return numErro;
 	}
-	public void setUbesDtMov(Timestamp ubesDtMov) {
-		this.ubesDtMov = ubesDtMov;
+	public void setNumErro(Long numErro) {
+		this.numErro = numErro;
 	}
 	public String getMensagem() {
 		return mensagem;
@@ -36,10 +43,10 @@ public class UBIEsocialEventosStageLog {
 	public void setStatus(StatusLotesEventosEnum status) {
 		this.status = status;
 	}
-	public Long getNumErro() {
-		return numErro;
+	public String getRowId() {
+		return rowId;
 	}
-	public void setNumErro(Long numErro) {
-		this.numErro = numErro;
+	public void setRowId(String rowId) {
+		this.rowId = rowId;
 	}
 }

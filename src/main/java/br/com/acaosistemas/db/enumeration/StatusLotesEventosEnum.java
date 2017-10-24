@@ -2,23 +2,23 @@ package br.com.acaosistemas.db.enumeration;
 
 import br.com.acaosistemas.frw.enumeration.BaseEnum;
 
-public enum StatusEsocialEventosStageEnum implements BaseEnum<Integer> {
+public enum StatusLotesEventosEnum implements BaseEnum<Integer> {
 	/**
-     * Indica que o evento da stage esta pronto para ser assinado.
+     * Indica que o lote esta pronto para ser enviado para o eSocial.
      */
-    A_ASSINAR(201, "A assinar"),
+    A_ENVIAR(201, "A enviar"),
  
     /**
      * Indica que o evento da stage foi assinado com sucesso pelo web service
      * de assinatura de evento.
      */
-    ASSINADO_COM_SUCESSO(298, "Evento da stage foi assinado com sucesso"),
+    ENVIADO_COM_SUCESSO(298, "Lote de eventos enviado para o eSocial com sucesso"),
     
     /**
      * Indica que houve um erro na assinatura do evento da stage pelo web service
      * de assinatura de evento.
      */
-    ERRO_ASSINATURA_IRRECUPERAVEL(299, "Erro na assinatura do evento da stage - irrecuperável");
+    ERRO_ENVIO_IRRECUPERAVEL(299, "Erro no envio do lote de eventos para o eSocial - irrecuperável");
 
     private Integer id;
     private String descricao;
@@ -29,7 +29,7 @@ public enum StatusEsocialEventosStageEnum implements BaseEnum<Integer> {
      * @param id Identificador da enumeracao.
      * @param descricao Descricao da enumeracao.
      */
-    StatusEsocialEventosStageEnum(final Integer id, final String descricao) {
+    StatusLotesEventosEnum(final Integer id, final String descricao) {
         this.id = id;
         this.descricao = descricao;
     }
@@ -50,13 +50,13 @@ public enum StatusEsocialEventosStageEnum implements BaseEnum<Integer> {
      * @param id Identificador da enumeracao.
      * @return Enumeracao alcancada.
      */
-    public static StatusEsocialEventosStageEnum getById(final Integer id) {
-    	StatusEsocialEventosStageEnum statusEventoStageEnum = null;
-        for (final StatusEsocialEventosStageEnum someEnum : values()) {
+    public static StatusLotesEventosEnum getById(final Integer id) {
+    	StatusLotesEventosEnum statusLoteEnum = null;
+        for (final StatusLotesEventosEnum someEnum : values()) {
             if (someEnum.getId().equals(id)) {
-                statusEventoStageEnum =  someEnum;
+                statusLoteEnum =  someEnum;
             }
         }
-        return statusEventoStageEnum;
+        return statusLoteEnum;
     }
 }
