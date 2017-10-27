@@ -1,7 +1,5 @@
 package br.com.acaosistemas.db.model;
 
-import java.sql.Timestamp;
-
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 
 /**
@@ -13,6 +11,7 @@ public class UBILotesEsocial {
 
 	private Long ubiLoteNumero;
 	private StatusLotesEventosEnum status;
+	private String xmlRetornoLote;
 	private String rowId;
 	
 	public Long getUbiLoteNumero() {
@@ -27,6 +26,12 @@ public class UBILotesEsocial {
 	}
 	public void setStatus(StatusLotesEventosEnum status) {
 		this.status = status;
+	}
+	public String getXmlRetornoLote() {
+		return xmlRetornoLote;
+	}
+	public void setXmlRetornoLote(String xmlRetornoLote) {
+		this.xmlRetornoLote = xmlRetornoLote;
 	}
 	public String getRowId() {
 		return rowId;

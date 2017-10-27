@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
-import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 
 
@@ -91,6 +89,24 @@ public class UBILotesEsocialDAO {
 					"UPDATE ubi_lotes_esocial uble SET uble.status = ? WHERE uble.rowid = ?");
 		
 			stmt.setInt(1, pUbleRow.getStatus().getId());
+			stmt.setString(2, pUbleRow.getRowId());
+			
+			stmt.execute();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}		
+	}
+
+	public void updateXmlRetornoLote(UBILotesEsocial pUbleRow) {
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement(
+					"UPDATE ubi_lotes_esocial uble SET uble.xml_retorno_lote = ? WHERE uble.rowid = ?");
+		
+			stmt.setString(1, pUbleRow.getXmlRetornoLote());
 			stmt.setString(2, pUbleRow.getRowId());
 			
 			stmt.execute();

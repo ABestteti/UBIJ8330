@@ -26,6 +26,7 @@ public class ProcessarLotesEventos {
 		UBILotesEsocialDAO    ubleDAO             = new UBILotesEsocialDAO();
 		List<UBILotesEsocial> listaUbiLoteEventos = new ArrayList<UBILotesEsocial>();
 		UBILotesEsocialLog    ubll                = new UBILotesEsocialLog();
+		String                xmlRetornoLote;
 		
 		listaUbiLoteEventos = ubleDAO.listUBILotesEsocial(StatusLotesEventosEnum.A_ENVIAR);
 				
@@ -36,12 +37,17 @@ public class ProcessarLotesEventos {
 			System.out.println("     Processando rowId: "+ubleRow.getRowId());
 				
 			try {
-				clientWS.execWebService(ubleRow);
+				xmlRetornoLote = clientWS.execWebService(ubleRow);
 				
 				// Atualiza o status da tabela UBI_POBOX_XML para
 				// ENVIADO_COM_SUCESSO (298)
 				ubleRow.setStatus(StatusLotesEventosEnum.ENVIADO_COM_SUCESSO);
 				ubleDAO.updateStatus(ubleRow);
+				
+				// Atualiza a coluna XML_RETORNO_LOTE com o
+				// xml retornado pelo ws de envio de lote de eventos.
+				ubleRow.setXmlRetornoLote(xmlRetornoLote);
+				ubleDAO.updateXmlRetornoLote(ubleRow);
 				
 				// Insere no log o resultado da chamada do web service
 				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());

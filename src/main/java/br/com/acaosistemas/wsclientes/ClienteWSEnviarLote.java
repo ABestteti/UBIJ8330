@@ -20,9 +20,10 @@ public class ClienteWSEnviarLote {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
+	public String execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
 		String wsEndPoint;
+		String xmlRetornoLote;
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
@@ -66,8 +67,9 @@ public class ClienteWSEnviarLote {
 			    }
 			}
 			else {
+				xmlRetornoLote = HttpUtils.readResponse(request);
 				System.out.println("HTTP code .....: " + request.getResponseMessage());
-				System.err.println("Message from ws: " + HttpUtils.readResponse(request) + " [" + wsEndPoint + "]");
+				System.out.println("Message from ws: " + xmlRetornoLote + " [" + wsEndPoint + "]");
 			}
 						
 		} catch (MalformedURLException e) {
@@ -77,5 +79,7 @@ public class ClienteWSEnviarLote {
 		} catch (IOException e) {
 			throw new IOException(e.getMessage()+":\n"+ExceptionUtils.stringStackTrace(e));
 		}
+		
+		return xmlRetornoLote;
 	}
 }
