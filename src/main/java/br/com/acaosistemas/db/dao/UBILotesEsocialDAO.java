@@ -1,5 +1,6 @@
 package br.com.acaosistemas.db.dao;
 
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -101,15 +102,16 @@ public class UBILotesEsocialDAO {
 
 	public void updateXmlRetornoLote(UBILotesEsocial pUbleRow) {
 		PreparedStatement stmt = null;
+		StringReader readerXmlRetornoLote = new StringReader(pUbleRow.getXmlRetornoLote());
 		
 		try {
 			stmt = conn.prepareStatement(
 					"UPDATE ubi_lotes_esocial uble SET uble.xml_retorno_lote = ? WHERE uble.rowid = ?");
 		
-			stmt.setString(1, pUbleRow.getXmlRetornoLote());
+			stmt.setCharacterStream(1, readerXmlRetornoLote, pUbleRow.getXmlRetornoLote().length());
 			stmt.setString(2, pUbleRow.getRowId());
 			
-			stmt.execute();
+			stmt.executeUpdate();
 			stmt.close();
 			
 		} catch (SQLException e) {
