@@ -7,17 +7,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.acaosistemas.db.dao.UBIEsocialEventosStageDAO;
-import br.com.acaosistemas.db.dao.UBIEsocialEventosStageLogDAO;
 import br.com.acaosistemas.db.dao.UBILotesEsocialDAO;
 import br.com.acaosistemas.db.dao.UBILotesEsocialLogDAO;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStageLog;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.db.model.UBILotesEsocialLog;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
-import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
 import br.com.acaosistemas.wsclientes.ClienteWSConsultarLote;
 import br.com.acaosistemas.wsclientes.ClienteWSEnviarLote;
 
