@@ -16,11 +16,22 @@ import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSConsultarLote;
 import br.com.acaosistemas.wsclientes.ClienteWSEnviarLote;
 
+/**
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ * Classe para processar os lotes de eventos do eSocial que estao prontos
+ * para serem enviados ou consultados no eSocial.
+ * 
+ */
 public class ProcessarLotesEventos {
 
 	public ProcessarLotesEventos() {
 	}
 
+	/**
+	 * Processa todos os lotes que estejam com status A_ENVIAR (201)
+	 */
 	public void lerLotesProntosEnvio() {
 		ClienteWSEnviarLote   clientWS            = new ClienteWSEnviarLote();
 		UBILotesEsocialDAO    ubleDAO             = new UBILotesEsocialDAO();
@@ -39,12 +50,12 @@ public class ProcessarLotesEventos {
 			try {
 				xmlRetornoLote = clientWS.execWebService(ubleRow);
 				
-				// Atualiza o status da tabela UBI_POBOX_XML para
+				// Atualiza o status da tabela UBI_LOTES_ESOCIAL para
 				// ENVIADO_COM_SUCESSO (298)
 				ubleRow.setStatus(StatusLotesEventosEnum.ENVIADO_COM_SUCESSO);
 				ubleDAO.updateStatus(ubleRow);
 				
-				// Atualiza a coluna XML_RETORNO_LOTE com o
+				// Atualiza a coluna UBI_LOTES_ESOCIAL.XML_RETORNO_LOTE com o
 				// xml retornado pelo ws de envio de lote de eventos.
 				ubleRow.setXmlRetornoLote(xmlRetornoLote);
 				ubleDAO.updateXmlRetornoLote(ubleRow);
@@ -52,9 +63,7 @@ public class ProcessarLotesEventos {
 				// Insere no log o resultado da chamada do web service
 				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());
 				ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
-				ubll.setMensagem(Versao.getStringVersao() +
-						         "\n"                     +
-						         StatusLotesEventosEnum.ENVIADO_COM_SUCESSO.getDescricao());
+				ubll.setMensagem(StatusLotesEventosEnum.ENVIADO_COM_SUCESSO.getDescricao());
 				ubll.setStatus(StatusLotesEventosEnum.ENVIADO_COM_SUCESSO);
 				ubll.setNumErro(0L);
 				
@@ -87,6 +96,9 @@ public class ProcessarLotesEventos {
 		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Envio].");
 	}
 	
+	/**
+	 * Processa todos os lotes que estejam com status A_CONSULTAR (501)
+	 */
 	public void lerLotesProntosConsulta() {
 		ClienteWSConsultarLote clientWS            = new ClienteWSConsultarLote();
 		UBILotesEsocialDAO     ubleDAO             = new UBILotesEsocialDAO();
@@ -104,17 +116,15 @@ public class ProcessarLotesEventos {
 			try {
 				clientWS.execWebService(ubleRow);
 				
-				// Atualiza o status da tabela UBI_POBOX_XML para
-				// ENVIADO_COM_SUCESSO (298)
+				// Atualiza o status da tabela UBI_LOTES_ESOCIAL para
+				// CONSULTADO_COM_SUCESSO (598)
 				ubleRow.setStatus(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO);
 				ubleDAO.updateStatus(ubleRow);
 				
 				// Insere no log o resultado da chamada do web service
 				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());
 				ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
-				ubll.setMensagem(Versao.getStringVersao() +
-						         "\n"                     +
-						         StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO.getDescricao());
+				ubll.setMensagem(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO.getDescricao());
 				ubll.setStatus(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO);
 				ubll.setNumErro(0L);
 				
@@ -147,12 +157,21 @@ public class ProcessarLotesEventos {
 		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Consulta].");
 	}
 	
+	/**
+	 * Metodo responsavel por gravar as mensagens de excecao decorrentes da execucao dos
+	 * servicos web de envio e consulta do lote de eventos no eSocial.
+	 * 
+	 * @param pUbleRow
+	 * Representa uma linha da tabela UBI_LOTES_ESOCIAL.
+	 * @param pException
+	 * Objeto com a excecao gerada na execucao do web service.
+	 */
 	private void gravaExcecaoLog(UBILotesEsocial pUbleRow, Exception pException) {
 		UBILotesEsocialDAO ubleDAO = new UBILotesEsocialDAO();
 		
 		ubleDAO.updateStatus(pUbleRow);
 		
-		// Grava na tabela UBI_POBOX_XML_LOG a string com a mensagem de
+		// Grava na tabela UBI_LOTES_ESOCIAL_LOG a string com a mensagem de
 		// erro completa				
 		UBILotesEsocialLogDAO ubllDAO = new UBILotesEsocialLogDAO();
 		UBILotesEsocialLog    ubll    = new UBILotesEsocialLog();

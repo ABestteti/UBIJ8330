@@ -6,21 +6,28 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
-import br.com.acaosistemas.db.dao.UBILotesEsocialDAO;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
 
+/**
+ * Classe de implementacao do metodo de consumo do web service de consulta
+ * do lote de eventos no eSocial.
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
 public class ClienteWSConsultarLote {
 
-	/**
-	 * Construtor default da classe
-	 */
-	public ClienteWSConsultarLote() {
-		// TODO Auto-generated constructor stub
-	}
-
+    /**
+     * Metodo de consumo do web service de consulta do lote de eventos
+     * no eSocial.
+     * 
+     * @param pUbleRow
+     * @throws MalformedURLException
+     * @throws IOException
+     */
 	public void execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
 		String wsEndPoint;
@@ -69,7 +76,7 @@ public class ClienteWSConsultarLote {
 			}
 			else {
 				System.out.println("HTTP code .....: " + request.getResponseMessage());
-				System.err.println("Message from ws: " + HttpUtils.readResponse(request) + " [" + wsEndPoint + "]");
+				System.out.println("Message from ws: " + HttpUtils.readResponse(request) + " [" + wsEndPoint + "]");
 			}
 						
 		} catch (MalformedURLException e) {

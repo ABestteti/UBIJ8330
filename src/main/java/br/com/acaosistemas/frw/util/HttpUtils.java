@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
+/**
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ * Classe utilitaria para a classe Http
+ */
 public final class HttpUtils {
 
 	/***

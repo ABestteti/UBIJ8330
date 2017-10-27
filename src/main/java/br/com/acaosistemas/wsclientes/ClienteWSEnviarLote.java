@@ -11,14 +11,14 @@ import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
 
+/**
+ * Classe de implementacao do metodo de consumo do web service de envio
+ * do lote de eventos para o eSocial.
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
 public class ClienteWSEnviarLote {
-
-	/**
-	 * Construtor default da classe
-	 */
-	public ClienteWSEnviarLote() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	public String execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;

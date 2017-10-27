@@ -9,13 +9,20 @@ import br.com.acaosistemas.db.connection.DBConnectionInfo;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import oracle.jdbc.OracleTypes;
 
+/**
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ * Classe de inicializacao do servico de envio e consulta
+ * do lote de eventos do eSocial.
+ */
 public class Daemon {
 
 	private static final int STOP_DAEMON             = 1;
 	private static final int CONSULTAR_STATUS        = 2;
 	private static final int CONSULTAR_VERSAO_DAEMON = 3;
 	
-	private static final int DEAMON_ALIVE     = 1;
+	private static final int DEAMON_ALIVE            = 1;
 
 	private Connection conn;
 	private CallableStatement stmt;
@@ -48,6 +55,10 @@ public class Daemon {
 
 	}
 	
+	/**
+	 * Loop principal de leitura do pipe de comunicacao do banco
+	 * O metodo adormece 5 segundos a cada iteracao do loop.
+	 */
     private void lerPipeDB() {
 		// Rowid de uma linha da table UBI_POBOX_XML
 		String pipeConteudo  = "";
@@ -58,7 +69,7 @@ public class Daemon {
 		int    pipeStatus = -1;
 		
 		// Controla o loop de leitura do PIPE
-		boolean stopDeamon = false;
+		boolean stopDaemon = false;
 		
 		// Objects de acesso as tabelas do banco de dados
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
@@ -75,10 +86,10 @@ public class Daemon {
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
 		// na tabela UBI_POBOX_XML
-		while (!stopDeamon) {
+		while (!stopDaemon) {
 			
 			// Pausa a execucao da thread principal por 5 segundos
-			// Com iso, e liberado o lock da dbms_pipe, permitindo que a 
+			// Com isso, e liberado o lock da dbms_pipe, permitindo que a 
 			// consiliacao de usuario possa conceder grant da package para
 			// o usuario que esta sem conciliado.
             try {
@@ -151,7 +162,7 @@ public class Daemon {
 			     	break;		
 				case STOP_DAEMON:
 					System.out.println("Recebido comando stop do servico!");
-					stopDeamon = true;
+					stopDaemon = true;
 					break;
 				}
 			}
@@ -164,10 +175,15 @@ public class Daemon {
 				throw new RuntimeException(e) ;
 			}
 			
-			// Inicia o processo de leitura dos registros da tabela de stage
-			// cujo status seja A_ASSINAR (201)
-			new ProcessarLotesEventos().lerLotesProntosEnvio();
-			new ProcessarLotesEventos().lerLotesProntosConsulta();
+			if (!stopDaemon) {
+				// Inicia o processo de leitura dos registros da tabela de lote 
+				// de eventos cujo status seja A_ENVIAR (201)
+				new ProcessarLotesEventos().lerLotesProntosEnvio();
+
+				// Inicia o processo de leitura dos registros da tabela de lote 
+				// de eventos cujo status seja A_CONSULTAR (501)
+				new ProcessarLotesEventos().lerLotesProntosConsulta();
+			}
 		}
 		
 		try {
@@ -181,6 +197,15 @@ public class Daemon {
 		System.exit(0);
 	}
 	
+    /**
+     * Retorna para o cliente uma informacao para dizer que esse
+     * servico esta rodando. A comunicacao e feita atraves de um
+     * pipe de banco temporario.
+     * 
+     * @param pPipeReturn nome do pipe temporario que sera utilizado para retornar o
+     * status do servico.
+     * 
+     */
 	private void statusDaemon(String pPipeReturn) {
 		try {
 			if (!stmt.isClosed()) {
@@ -188,44 +213,45 @@ public class Daemon {
 			}
 			
 			// Retorna o status do deamon, informando
-			// que ele esta ativo: DEAMON_ALIVE
-			//dbms_pipe.pack_message(pipe_name);
+			// que ele esta ativo: DEAMON_ALIVE.
 			stmt = conn.prepareCall("BEGIN dbms_pipe.pack_message(?); ? := dbms_pipe.send_message(?,2); END;");
 			
-			// Manda para o pipe o status que representa que o
-			// o deamon esta rodando.
+			// Manda para o pipe o status de daemon ativo.
 			stmt.setInt(1, DEAMON_ALIVE);
 			stmt.registerOutParameter(2, OracleTypes.NUMBER);			
 			stmt.setString(3, pPipeReturn);
 			
-			stmt.execute();
-			
+			stmt.execute();			
 			stmt.close();
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}	    
 	}
-	
+
+	/**
+	 * Retorna uma string com a versao do daemon. A comunicacao e feita atraves de um
+     * pipe de banco temporario.
+     * 
+	 * @param pPipeReturn
+     * Nome do pipe temporario que sera utilizado para retornar o
+     * status do servico.
+     */
 	private void versaoDaemon(String pPipeReturn) {
 		try {
 			if (!stmt.isClosed()) {
 				stmt.close();
 			}
 			
-			// Retorna o status do deamon, informando
-			// que ele esta ativo: DEAMON_ALIVE
-			//dbms_pipe.pack_message(pipe_name);
+			// Retorna a versao do daemon.
 			stmt = conn.prepareCall("BEGIN dbms_pipe.pack_message(?); ? := dbms_pipe.send_message(?,2); END;");
 			
-			// Manda para o pipe o status que representa que o
-			// o deamon esta rodando.
+			// Manda para o pipe a string com a versao do daemon.
 			stmt.setString(1, Versao.getStringVersao());
 			stmt.registerOutParameter(2, OracleTypes.NUMBER);			
 			stmt.setString(3, pPipeReturn);
 			
-			stmt.execute();
-			
+			stmt.execute();			
 			stmt.close();
 			
 		} catch (SQLException e) {
