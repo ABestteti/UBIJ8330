@@ -112,9 +112,7 @@ public class ProcessarLotesEventos {
 				// Insere no log o resultado da chamada do web service
 				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());
 				ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
-				ubll.setMensagem(Versao.getStringVersao() +
-						         "\n"                     +
-						         StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO.getDescricao());
+				ubll.setMensagem(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO.getDescricao());
 				ubll.setStatus(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO);
 				ubll.setNumErro(0L);
 				
