@@ -62,7 +62,7 @@ public class UBIRuntimesDAO {
 			
 			stmt.setString(1, pRuntimeID);
 			
-			runtimeExists = stmt.execute();
+			runtimeExists = stmt.executeQuery().next();
 			
 			stmt.close();			
 		} catch (SQLException e) {

@@ -37,7 +37,7 @@ public class UBILotesEsocialDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT uble.ubi_lote_numero,uble.status FROM ubi_lotes_esocial uble WHERE uble.rowid = ?");
+					"SELECT uble.ubi_lote_numero,uble.ubca_cnpj,uble.status FROM ubi_lotes_esocial uble WHERE uble.rowid = ?");
 			
 			stmt.setString(1, pRowID);
 			
@@ -45,6 +45,7 @@ public class UBILotesEsocialDAO {
 			
 			while (rs.next()) {
 				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
+				uble.setUbcaCnpj(rs.getLong("ubca_cnpj"));
 				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
 				uble.setRowId(pRowID);
 			}
@@ -61,7 +62,7 @@ public class UBILotesEsocialDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT uble.ubi_lote_numero,uble.status,uble.rowid FROM ubi_lotes_esocial uble WHERE uble.status = ?");
+					"SELECT uble.ubi_lote_numero,ubca_cnpj,uble.status,uble.rowid FROM ubi_lotes_esocial uble WHERE uble.status = ?");
 			
 			stmt.setInt(1, pStatus.getId());
 			
@@ -71,6 +72,7 @@ public class UBILotesEsocialDAO {
 				UBILotesEsocial uble = new UBILotesEsocial();
 				
 				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
+				uble.setUbcaCnpj(rs.getLong("ubca_cnpj"));
 				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
 				uble.setRowId(rs.getString("rowId"));
 				

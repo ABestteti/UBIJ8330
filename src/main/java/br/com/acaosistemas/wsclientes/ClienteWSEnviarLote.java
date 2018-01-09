@@ -35,7 +35,9 @@ public class ClienteWSEnviarLote {
 			// Recupera do banco de dados a informação do runtime que identifica a
 			// URL do web service do UBI para iniciar o processo de envio de lote de
 			// eventos, especifíco para o CNPJ em questão.
-			wsEndPoint = runtimeDAO.getRuntimeValue("UBICNPJ".concat(pUbleRow.getUbiLoteNumero().toString()));
+			// Essa é uma solução de contorno para o problema com a troca de certificado, quando muda
+			// o CNPJ do lote de eventos, por conta o cache criado pelo Apache CXF no WildFly.
+			wsEndPoint = runtimeDAO.getRuntimeValue("UBIELCNPJ".concat(pUbleRow.getUbcaCnpj().toString().trim()));
 		}
 		
 		// Fecha a conexao com o banco de dados

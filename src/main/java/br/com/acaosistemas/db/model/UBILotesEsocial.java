@@ -10,6 +10,7 @@ import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 public class UBILotesEsocial {
 
 	private Long ubiLoteNumero;
+	private Long ubcaCnpj;
 	private StatusLotesEventosEnum status;
 	private String xmlRetornoLote;
 	private String rowId;
@@ -32,6 +33,12 @@ public class UBILotesEsocial {
 	}
 	public void setXmlRetornoLote(String xmlRetornoLote) {
 		this.xmlRetornoLote = xmlRetornoLote;
+	}
+	public Long getUbcaCnpj() {
+		return ubcaCnpj;
+	}
+	public void setUbcaCnpj(Long ubcaCnpj) {
+		this.ubcaCnpj = ubcaCnpj;
 	}
 	public String getRowId() {
 		return rowId;

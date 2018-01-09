@@ -34,8 +34,18 @@ public class ClienteWSConsultarLote {
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
-		// Recupera do banco de dados a informacao do runtime UBIWSCONSULTALOTE
-		wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");
+		if (!runtimeDAO.runtimeIdExists("UBICNPJ")) {
+			// Recupera do banco de dados a informacao do runtime UBIWSCONSULTALOTE
+			wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");
+		}
+		else {
+			// Recupera do banco de dados a informação do runtime que identifica a
+			// URL do web service do UBI para iniciar o processo de envio de lote de
+			// eventos, especifíco para o CNPJ em questão.
+			// Essa é uma solução de contorno para o problema com a troca de certificado, quando muda
+			// o CNPJ do lote de eventos, por conta o cache criado pelo Apache CXF no WildFly.
+			wsEndPoint = runtimeDAO.getRuntimeValue("UBICLCNPJ".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+		}
 		
 		// Fecha a conexao com o banco de dados
 		runtimeDAO.closeConnection();
