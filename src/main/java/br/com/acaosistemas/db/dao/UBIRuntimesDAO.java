@@ -33,36 +33,17 @@ public class UBIRuntimesDAO {
 		
 		try {
 			stmt = conn.prepareStatement("SELECT ubru.valor FROM ubi_runtimes ubru WHERE ubru.id = ?");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
 			stmt.setString(1, pRuntimeID);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		try {
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
 				runt.setValor(rs.getString("valor"));
 			}
 			
-			rs.close();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
+			rs.close();			
 			stmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
