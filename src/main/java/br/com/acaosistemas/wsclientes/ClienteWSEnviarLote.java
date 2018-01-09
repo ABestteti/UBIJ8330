@@ -27,8 +27,16 @@ public class ClienteWSEnviarLote {
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
-		// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
-		wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSENVIALOTE");
+		if (!runtimeDAO.runtimeIdExists("UBICNPJ")) {
+			// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
+		    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSENVIALOTE");			
+		}
+		else {
+			// Recupera do banco de dados a informação do runtime que identifica a
+			// URL do web service do UBI para iniciar o processo de envio de lote de
+			// eventos, especifíco para o CNPJ em questão.
+			wsEndPoint = runtimeDAO.getRuntimeValue("UBICNPJ".concat(pUbleRow.getUbiLoteNumero().toString()));
+		}
 		
 		// Fecha a conexao com o banco de dados
 		runtimeDAO.closeConnection();

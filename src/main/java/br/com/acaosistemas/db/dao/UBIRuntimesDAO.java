@@ -26,7 +26,7 @@ public class UBIRuntimesDAO {
 		}
 	}
 	
-	public String getRuntimeValue(String pRuntimeID) {
+	public String getRuntimeValue(final String pRuntimeID) {
 		PreparedStatement stmt = null;
 		
 		runt = new UBIRuntimes();
@@ -67,6 +67,28 @@ public class UBIRuntimesDAO {
 		}
 		
 		return runt.getValor();
+	}
+	
+	public boolean runtimeIdExists(final String pRuntimeID) {
+		boolean runtimeExists = false;
+		
+		PreparedStatement stmt = null;
+		
+		runt = new UBIRuntimes();
+		
+		try {
+			stmt = conn.prepareStatement("SELECT ubru.id FROM ubi_runtimes ubru WHERE ubru.id = ?");
+			
+			stmt.setString(1, pRuntimeID);
+			
+			runtimeExists = stmt.execute();
+			
+			stmt.close();			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return runtimeExists;
 	}
 
 }

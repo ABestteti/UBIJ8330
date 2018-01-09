@@ -8,10 +8,10 @@ package br.com.acaosistemas.main;
 public final class Versao {
     
 	private static String empresa   = "Universo Desenvolvimento de Sistemas Ltda\n";
-	private static String copyright = "Direitos Autorais (c) 2017-2017\n";
+	private static String copyright = "Direitos Autorais (c) 2017-2018\n";
 	private static String descricao = "Servico de consumo dos web services de envio e consulta de lotes no eSocial.\n";
 	private static String programa  = "UBIJ8330";
-	private static String versao    = "3.0.00.31.10.2017";
+	private static String versao    = "3.0.00.09.01.2018";
 	
 	/**
 	 * 
