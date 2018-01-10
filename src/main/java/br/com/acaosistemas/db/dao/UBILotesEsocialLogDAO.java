@@ -33,7 +33,6 @@ public class UBILotesEsocialLogDAO {
 		PreparedStatement stmt = null;
 		
 		for (int tentativa = 1; tentativa <= RETRIES; tentativa++) {
-
 			try {
 				stmt = conn.prepareStatement(
 						"INSERT INTO ubi_lotes_esocial_log (dt_mov,num_erro,mensagem,uble_ubi_lote_numero,status) VALUES (?,?,?,?,?)");
@@ -49,12 +48,9 @@ public class UBILotesEsocialLogDAO {
 				break; // cai fora do laço caso a inserção ocorra sem problema.
 
 			} catch (SQLException e) {
-
 				if (e.getMessage().contains(ORA_DUP_VAL_ON_INDEX_ERROR)) {
-
 					if (tentativa <= RETRIES) {
-						try {
-							
+						try {							
 							// Aguarda 250 milisegundos para atualizar o TimeStamp de
 							// pUbllRow.setDtMov.
 							Thread.sleep(250);
@@ -69,7 +65,7 @@ public class UBILotesEsocialLogDAO {
 					} else {
 						System.out.println(
 								"Lote: " + pUbllRow.getUbleUbiLoteNumero() +
-								" - " + RETRIES +
+								" - "    + RETRIES +
 								" tentativas de inclusão do log sem êxito.");
 						e.printStackTrace();
 					}

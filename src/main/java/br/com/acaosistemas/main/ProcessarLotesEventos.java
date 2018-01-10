@@ -46,6 +46,7 @@ public class ProcessarLotesEventos {
 		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
 			
 			System.out.println("     Processando rowId: "+ubleRow.getRowId());
+			System.out.println("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
 				
 			try {
 				xmlRetornoLote = clientWS.execWebService(ubleRow);

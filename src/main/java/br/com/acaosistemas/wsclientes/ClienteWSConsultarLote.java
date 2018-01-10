@@ -31,20 +31,27 @@ public class ClienteWSConsultarLote {
 	public void execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
 		String wsEndPoint;
+		String portaCNPJ;
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
-		if (!runtimeDAO.runtimeIdExists("UBICNPJ")) {
-			// Recupera do banco de dados a informacao do runtime UBIWSCONSULTALOTE
-			wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");
-		}
-		else {
-			// Recupera do banco de dados a informação do runtime que identifica a
-			// URL do web service do UBI para iniciar o processo de envio de lote de
-			// eventos, especifíco para o CNPJ em questão.
-			// Essa é uma solução de contorno para o problema com a troca de certificado, quando muda
-			// o CNPJ do lote de eventos, por conta o cache criado pelo Apache CXF no WildFly.
-			wsEndPoint = runtimeDAO.getRuntimeValue("UBICLCNPJ".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+		wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");
+		
+		if (runtimeDAO.runtimeIdExists("PORTACNPJ")) {
+			// Recupera do banco de dados a informação do runtime que identifica
+			// a porta HTTP do web service do UBI para iniciar o processo de
+			// envio de lote de eventos, especifíco para o CNPJ em questão.
+			// Essa é uma solução de contorno para o problema com a troca de
+			// certificado, quando muda o CNPJ do lote de eventos, por conta 
+			// do cache criado pelo Apache CXF no WildFly.
+			portaCNPJ = runtimeDAO.getRuntimeValue("PORTA".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+
+			// Substitui a porta definida na URL do runtime UBIWSCONSULTALOTE pela
+			// porta definida pelo runtime do CNPJ em processamento. 
+			// Para tanto, é usada a expressão regular "(?<port>:\\d+)"
+			// que faz o match pelo grupo <port> seguido de um ou mais dígitos
+			// "\\d+"
+			wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaCNPJ));
 		}
 		
 		// Fecha a conexao com o banco de dados

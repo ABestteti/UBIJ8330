@@ -23,21 +23,29 @@ public class ClienteWSEnviarLote {
 	public String execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
 		String wsEndPoint;
+		String portaCNPJ;
 		String xmlRetornoLote;
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
-		if (!runtimeDAO.runtimeIdExists("UBICNPJ")) {
-			// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
-		    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSENVIALOTE");			
-		}
-		else {
-			// Recupera do banco de dados a informação do runtime que identifica a
-			// URL do web service do UBI para iniciar o processo de envio de lote de
-			// eventos, especifíco para o CNPJ em questão.
-			// Essa é uma solução de contorno para o problema com a troca de certificado, quando muda
-			// o CNPJ do lote de eventos, por conta o cache criado pelo Apache CXF no WildFly.
-			wsEndPoint = runtimeDAO.getRuntimeValue("UBIELCNPJ".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+		// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
+	    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSENVIALOTE");			
+
+	    if (runtimeDAO.runtimeIdExists("PORTACNPJ")) {
+			// Recupera do banco de dados a informação do runtime que identifica
+			// a porta HTTP do web service do UBI para iniciar o processo de
+			// envio de lote de eventos, especifíco para o CNPJ em questão.
+			// Essa é uma solução de contorno para o problema com a troca de
+			// certificado, quando muda o CNPJ do lote de eventos, por conta 
+			// do cache criado pelo Apache CXF no WildFly.
+			portaCNPJ = runtimeDAO.getRuntimeValue("PORTA".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+			
+			// Substitui a porta definida na URL do runtime UBIWSCONSULTALOTE pela
+			// porta definida pelo runtime do CNPJ em processamento. 
+			// Para tanto, é usada a expressão regular "(?<port>:\\d+)"
+			// que faz o match pelo grupo <port> seguido de um ou mais dígitos
+			// "\\d+"
+			wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaCNPJ));			
 		}
 		
 		// Fecha a conexao com o banco de dados
@@ -62,17 +70,17 @@ public class ClienteWSEnviarLote {
 			
 			if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
 			    if (request.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-				    throw new MalformedURLException("CÃ³digo HTTP retornado: " + 
+				    throw new MalformedURLException("Codigo HTTP retornado: " + 
 			                                        request.getResponseCode() + 
 			                                        " [" + wsEndPoint + "]\n" +
-			                                        "ParÃ¢metros: "            + 
+			                                        "Parametros: "            + 
 			                                        parametros);
 			    }
 			    else {
-			    	    throw new IOException("CÃ³digo HTTP retornado: "     + 
+			    	    throw new IOException("Codigo HTTP retornado: "     + 
 			                              request.getResponseCode() + 
 			                              " [" + wsEndPoint + "]\n" +
-			                              "ParÃ¢metros: "            +
+			                              "Parametros: "            +
 			                              parametros);
 			    }
 			}
