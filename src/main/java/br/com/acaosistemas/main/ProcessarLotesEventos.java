@@ -45,6 +45,7 @@ public class ProcessarLotesEventos {
 		
 		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
 			
+			System.out.println(new Timestamp(System.currentTimeMillis()).toString());
 			System.out.println("     Processando rowId: "+ubleRow.getRowId());
 			System.out.println("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
 				
@@ -112,7 +113,9 @@ public class ProcessarLotesEventos {
 		
 		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
 			
+			System.out.println(new Timestamp(System.currentTimeMillis()).toString());
 			System.out.println("     Processando rowId: "+ubleRow.getRowId());
+			System.out.println("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
 				
 			try {
 				clientWS.execWebService(ubleRow);

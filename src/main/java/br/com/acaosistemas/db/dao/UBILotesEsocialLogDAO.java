@@ -32,6 +32,9 @@ public class UBILotesEsocialLogDAO {
         
 		PreparedStatement stmt = null;
 		
+		// Laço para tratar erro ORA_DUP_VAL_ON_INDEX_ERROR. Se não ocorrer o erro na primeira iteração,
+		// então o laço será interrompido. Caso, contrário serão feitas mais duas tentativas de inserção
+		// com a atualização de pUbllRow.setDtMov com novo Timestamp.
 		for (int tentativa = 1; tentativa <= RETRIES; tentativa++) {
 			try {
 				stmt = conn.prepareStatement(
@@ -44,12 +47,11 @@ public class UBILotesEsocialLogDAO {
 				stmt.setInt(5, pUbllRow.getStatus().getId());
 
 				stmt.execute();
-				stmt.close();
 				break; // cai fora do laço caso a inserção ocorra sem problema.
 
 			} catch (SQLException e) {
 				if (e.getMessage().contains(ORA_DUP_VAL_ON_INDEX_ERROR)) {
-					if (tentativa <= RETRIES) {
+					if (tentativa < RETRIES) {
 						try {							
 							// Aguarda 250 milisegundos para atualizar o TimeStamp de
 							// pUbllRow.setDtMov.
@@ -72,6 +74,12 @@ public class UBILotesEsocialLogDAO {
 				} else {
 					e.printStackTrace();
 				}
+			} finally {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}				
 			}
 		}
 	}
