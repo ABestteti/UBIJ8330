@@ -1,5 +1,6 @@
 package br.com.acaosistemas.db.model;
 
+import br.com.acaosistemas.db.enumeration.LotesTipoAmbienteEnum;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 
 /**
@@ -14,6 +15,7 @@ public class UBILotesEsocial {
 	private StatusLotesEventosEnum status;
 	private String xmlRetornoLote;
 	private String rowId;
+	private LotesTipoAmbienteEnum tipoAmbiente;
 	
 	public Long getUbiLoteNumero() {
 		return ubiLoteNumero;
@@ -45,5 +47,11 @@ public class UBILotesEsocial {
 	}
 	public void setRowId(String rowId) {
 		this.rowId = rowId;
+	}
+	public LotesTipoAmbienteEnum getTipoAmbiente() {
+		return tipoAmbiente;
+	}
+	public void setTipoAmbiente(LotesTipoAmbienteEnum tipoAmbiente) {
+		this.tipoAmbiente = tipoAmbiente;
 	}
 }

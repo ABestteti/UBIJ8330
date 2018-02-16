@@ -52,6 +52,10 @@ public class ClienteWSConsultarLote {
 			// que faz o match pelo grupo <port> seguido de um ou mais d�gitos
 			// "\\d+"
 			wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaCNPJ));
+			
+			System.out.println("     Workaround ativado para o CNPJ");
+			System.out.println("     Uso da porta "+portaCNPJ+" definido para o CPNJ raiz "+pUbleRow.getUbcaCnpj());
+			System.out.println("     Nova URL do web service do UBI: "+wsEndPoint);
 		}
 		
 		// Fecha a conexao com o banco de dados
@@ -77,17 +81,17 @@ public class ClienteWSConsultarLote {
 			
 			if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
 			    if (request.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-				    throw new MalformedURLException("Código HTTP retornado: " + 
+				    throw new MalformedURLException("Codigo HTTP retornado: " + 
 			                                        request.getResponseCode() + 
 			                                        " [" + wsEndPoint + "]\n" +
-			                                        "Parâmetros: "            + 
+			                                        "Parametros: "            + 
 			                                        parametros);
 			    }
 			    else {
-			    	    throw new IOException("Código HTTP retornado: "     + 
+			    	    throw new IOException("Codigo HTTP retornado: "     + 
 			                              request.getResponseCode() + 
 			                              " [" + wsEndPoint + "]\n" +
-			                              "Parâmetros: "            +
+			                              "Parametros: "            +
 			                              parametros);
 			    }
 			}
