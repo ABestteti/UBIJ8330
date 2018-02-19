@@ -261,10 +261,14 @@ public class Daemon {
 			stmt.setString(3, pPipeReturn);
 			
 			stmt.execute();			
-			stmt.close();
-			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}	    
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}			
+		}
 	}
 }
