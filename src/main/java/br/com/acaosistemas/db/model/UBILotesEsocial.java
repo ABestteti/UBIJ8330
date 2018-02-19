@@ -12,7 +12,9 @@ public class UBILotesEsocial {
 
 	private Long ubiLoteNumero;
 	private Long ubcaCnpj;
+	private Long cnpjCompleto;
 	private StatusLotesEventosEnum status;
+	private String xmlLote;
 	private String xmlRetornoLote;
 	private String rowId;
 	private LotesTipoAmbienteEnum tipoAmbiente;
@@ -53,5 +55,17 @@ public class UBILotesEsocial {
 	}
 	public void setTipoAmbiente(LotesTipoAmbienteEnum tipoAmbiente) {
 		this.tipoAmbiente = tipoAmbiente;
+	}
+	public String getXmlLote() {
+		return xmlLote;
+	}
+	public void setXmlLote(String xmlLote) {
+		this.xmlLote = xmlLote;
+	}
+	public Long getCnpjCompleto() {
+		return cnpjCompleto;
+	}
+	public void setCnpjCompleto(Long cnpjCompleto) {
+		this.cnpjCompleto = cnpjCompleto;
 	}
 }

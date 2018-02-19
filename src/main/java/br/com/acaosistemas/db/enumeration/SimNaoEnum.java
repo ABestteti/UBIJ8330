@@ -3,10 +3,12 @@ package br.com.acaosistemas.db.enumeration;
 public enum SimNaoEnum {
     /**
      * Enumeracao para Sim.
+     * {@value S}
      */
     SIM("S", "Sim"),
     /**
      * Enumeracao para Nao.
+     * {@value N}
      */
     NAO("N", "Nao");
 	
