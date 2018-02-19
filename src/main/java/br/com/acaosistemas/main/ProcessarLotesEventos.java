@@ -97,7 +97,8 @@ public class ProcessarLotesEventos {
 	}
 	
 	/**
-	 * Processa todos os lotes que estejam com status A_CONSULTAR (501)
+	 * Processa todos os lotes que estejam com status A_CONSULTAR (501) 
+	 * {@link StatusLotesEventosEnum}
 	 */
 	public void lerLotesProntosConsulta() {
 		ClienteWSConsultarLote clientWS            = new ClienteWSConsultarLote();
