@@ -20,9 +20,7 @@ public final class ResetPipe {
 
     public static void reset(Connection pConn, String pPipeName) {
     	CallableStatement stmt;
-    	Integer pipeStatus;
-    	
-		// Prepara a chamada da funcao no banco de dados
+    	// Prepara a chamada da funcao no banco de dados
 		try {
 			stmt = pConn.prepareCall("{? = call dbms_pipe.remove_pipe(?)}");
 
@@ -34,9 +32,6 @@ public final class ResetPipe {
 
 			// Executa a funcao do banco
 			stmt.execute();
-
-			// Recupera o status da leitura do pipe do banco
-			pipeStatus = stmt.getInt(1);
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
