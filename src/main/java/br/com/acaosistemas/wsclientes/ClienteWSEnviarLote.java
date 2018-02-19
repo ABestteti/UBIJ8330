@@ -53,9 +53,6 @@ public class ClienteWSEnviarLote {
     		wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaWFAmbiente));
 	    }
 		
-		// Fecha a conexao com o banco de dados
-		runtimeDAO.closeConnection();
-		
 		// Monta o parametro de chamada do web service
 		parametros  = pUbleRow.getUbiLoteNumero().toString();
 		

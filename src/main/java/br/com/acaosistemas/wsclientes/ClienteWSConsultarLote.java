@@ -58,10 +58,6 @@ public class ClienteWSConsultarLote {
 			System.out.println("     Nova URL do web service do UBI: "+wsEndPoint);
 		}
 		
-		// Fecha a conexao com o banco de dados
-		runtimeDAO.closeConnection();
-		
-
 		// Monta o parametro de chamada do web service
 		parametros  = pUbleRow.getUbiLoteNumero().toString();
 		

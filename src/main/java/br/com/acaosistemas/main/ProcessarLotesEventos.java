@@ -71,7 +71,6 @@ public class ProcessarLotesEventos {
 				
 				UBILotesEsocialLogDAO ubllDAO = new UBILotesEsocialLogDAO();				
 				ubllDAO.insert(ubll);
-				ubllDAO.closeConnection();
 				
 			} catch (MalformedURLException e) {
 				// Caso a chamada do web service do correio retornar a excecao
@@ -94,7 +93,6 @@ public class ProcessarLotesEventos {
 			}
 		}
 		
-		ubleDAO.closeConnection();
 		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Envio].");
 	}
 	
@@ -134,7 +132,6 @@ public class ProcessarLotesEventos {
 				
 				UBILotesEsocialLogDAO ubllDAO = new UBILotesEsocialLogDAO();				
 				ubllDAO.insert(ubll);
-				ubllDAO.closeConnection();
 				
 			} catch (MalformedURLException e) {
 				// Caso a chamada do web service do correio retornar a excecao
@@ -157,7 +154,6 @@ public class ProcessarLotesEventos {
 			}
 		}
 		
-		ubleDAO.closeConnection();
 		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Consulta].");
 	}
 	
@@ -191,6 +187,5 @@ public class ProcessarLotesEventos {
 		ubll.setNumErro(new Long(pUbleRow.getStatus().getId()));
 		
 		ubllDAO.insert(ubll);
-		ubllDAO.closeConnection();		
 	}
 }

@@ -17,13 +17,13 @@ public class UBILotesEsocialLogDAO {
 		conn = new ConnectionFactory().getConnection();
 	}
 	
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public void insert(UBILotesEsocialLog pUbllRow) {
 

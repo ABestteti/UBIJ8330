@@ -78,7 +78,6 @@ public class Daemon {
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
 		
 		pipeName = runtimeDAO.getRuntimeValue("PIPEUBILOTE");
-		runtimeDAO.closeConnection();
 		
 		// Abre conexao com o banco para leitura do pipe do
 		// banco de dados.

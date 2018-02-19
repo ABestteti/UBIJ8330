@@ -17,14 +17,14 @@ public class UBIRuntimesDAO {
 		conn = new ConnectionFactory().getConnection();
 	}
 	
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public String getRuntimeValue(final String pRuntimeID) {
 		PreparedStatement stmt = null;
@@ -42,9 +42,14 @@ public class UBIRuntimesDAO {
 			}
 			
 			rs.close();			
-			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return runt.getValor();
@@ -67,6 +72,12 @@ public class UBIRuntimesDAO {
 			stmt.close();			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return runtimeExists;

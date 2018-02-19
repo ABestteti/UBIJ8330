@@ -23,13 +23,13 @@ public class UBILotesEsocialDAO {
 		conn = new ConnectionFactory().getConnection();
 	}
 	
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public UBILotesEsocial getUBILotesEsocial(String pRowID ) {
 		uble = new UBILotesEsocial();
@@ -53,7 +53,13 @@ public class UBILotesEsocialDAO {
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}		
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return uble;
 	}
@@ -83,7 +89,14 @@ public class UBILotesEsocialDAO {
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		return listaUBILotesEsocial;
 	}
 	
@@ -102,7 +115,13 @@ public class UBILotesEsocialDAO {
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}		
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void updateXmlRetornoLote(UBILotesEsocial pUbleRow) {
@@ -121,6 +140,12 @@ public class UBILotesEsocialDAO {
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}		
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
