@@ -37,8 +37,8 @@ public class ClienteWSEnviarLote {
 	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAO");
 	    	}
 	    } else if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO_RESTRITA) {
-	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODUCAORESTRITA")) {
-	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAORESTRITA");
+	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODRESTRITA")) {
+	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODRESTRITA");
 	    	}	    	
 	    }
 

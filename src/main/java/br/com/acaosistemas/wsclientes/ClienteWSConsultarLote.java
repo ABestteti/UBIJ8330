@@ -32,7 +32,6 @@ public class ClienteWSConsultarLote {
 	public void execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
 		String wsEndPoint;
-		String portaCNPJ;
 		String portaWFAmbiente = null;
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
@@ -45,8 +44,8 @@ public class ClienteWSConsultarLote {
 	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAO");
 	    	}
 	    } else if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO_RESTRITA) {
-	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODUCAORESTRITA")) {
-	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAORESTRITA");
+	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODRESTRITA")) {
+	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODRESTRITA");
 	    	}	    	
 	    }
 
