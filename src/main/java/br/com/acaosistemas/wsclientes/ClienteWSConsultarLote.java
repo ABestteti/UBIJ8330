@@ -37,7 +37,7 @@ public class ClienteWSConsultarLote {
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
 		// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
-	    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSENVIALOTE");			
+	    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");			
 
 	    if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO) {
 	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODUCAO")) {
