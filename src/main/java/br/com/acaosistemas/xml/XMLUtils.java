@@ -32,14 +32,18 @@ public final class XMLUtils {
 	 * de uma consulta XPath.<br>
 	 * Xpath: "/eSocial/envioLoteEventos/ideTransmissor/nrInsc"
 	 * 
-	 * Uma vez obtidia
+	 * Uma vez obtido o CNPJ do ideTransmissor, o mesmo e comparado contra o CNPJ completo do
+	 * cadastro de CNPJ autorizados.
 	 * 
 	 * @param pXml - conteundo XML do lote de eventos do eSocial.
 	 * @param pCnpjCompleto - CNPJ completo cadastrado na tabela UBI_CNPJ_AUTORIZADOS.
 	 * 
-	 * @exception {@link CnpjTransmissorException} quando o CNPJ do ideTransmisso, definido
+	 * @exception CnpjTransmissorException quando o CNPJ do ideTransmisso, definido
 	 * no lote de eventos do eSocial, for diferente do CNPJ completo do cadastro de CNPJs
-	 * autorizados.
+	 * autorizados. Dessa forma, e garantido que o ideTransmissor seja sempre igual ao CNPJ
+	 * completo, o qual e utilizado para fazer a troca de chaves com os servidores do eSocial,
+	 * nos ambiente de producao restrita e producao, no momento da invocacao do web service
+	 * de envio de lote de eventos do eSocial.
 	 *
 	 */
 	public static void validaCnpTransmissor(String pXml, String pCnpjCompleto) 

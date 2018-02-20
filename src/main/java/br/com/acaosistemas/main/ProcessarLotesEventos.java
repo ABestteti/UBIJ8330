@@ -54,7 +54,9 @@ public class ProcessarLotesEventos {
 			try {
 				
 				// Valida a tag <nrInsc> do grupo <ideTransmissor> do lote de
-				// eventos do eSocial.
+				// eventos do eSocial. Caso a validacao falhar, ous seja, o CNPJ do
+				// ideTransmissor seja diferente do CNPJ completo, a excecao 
+				// CnpjTransmissorException sera invocada.
 				XMLUtils.validaCnpTransmissor(
 						ubleRow.getXmlLote(),
 						ubleRow.getCnpjCompleto());

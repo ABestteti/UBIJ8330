@@ -7,6 +7,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
+import br.com.acaosistemas.db.enumeration.LotesTipoAmbienteEnum;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
@@ -32,31 +33,33 @@ public class ClienteWSConsultarLote {
 		String parametros;
 		String wsEndPoint;
 		String portaCNPJ;
+		String portaWFAmbiente = null;
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
-		wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");
-		
-		if (runtimeDAO.runtimeIdExists("PORTACNPJ")) {
-			// Recupera do banco de dados a informação do runtime que identifica
-			// a porta HTTP do web service do UBI para iniciar o processo de
-			// envio de lote de eventos, especifíco para o CNPJ em questão.
-			// Essa é uma solução de contorno para o problema com a troca de
-			// certificado, quando muda o CNPJ do lote de eventos, por conta 
-			// do cache criado pelo Apache CXF no WildFly.
-			portaCNPJ = runtimeDAO.getRuntimeValue("PORTA".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+		// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
+	    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSENVIALOTE");			
 
+	    if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO) {
+	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODUCAO")) {
+	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAO");
+	    	}
+	    } else if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO_RESTRITA) {
+	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODUCAORESTRITA")) {
+	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAORESTRITA");
+	    	}	    	
+	    }
+
+	    if (portaWFAmbiente != null) {
 			// Substitui a porta definida na URL do runtime UBIWSCONSULTALOTE pela
-			// porta definida pelo runtime do CNPJ em processamento. 
+			// porta definida para a instância do WilFly usado para produção restrita 
+	    	// do eSocial, ou a porta definida para a instância do WildFly usado para 
+	    	// produção do eSocial. 
 			// Para tanto, é usada a expressão regular "(?<port>:\\d+)"
 			// que faz o match pelo grupo <port> seguido de um ou mais dígitos
 			// "\\d+"
-			wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaCNPJ));
-			
-			System.out.println("     Workaround ativado para o CNPJ");
-			System.out.println("     Uso da porta "+portaCNPJ+" definido para o CPNJ raiz "+pUbleRow.getUbcaCnpj());
-			System.out.println("     Nova URL do web service do UBI: "+wsEndPoint);
-		}
+    		wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaWFAmbiente));
+	    }
 		
 		// Monta o parametro de chamada do web service
 		parametros  = pUbleRow.getUbiLoteNumero().toString();
