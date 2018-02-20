@@ -12,7 +12,7 @@ public class UBILotesEsocial {
 
 	private Long ubiLoteNumero;
 	private Long ubcaCnpj;
-	private Long cnpjCompleto;
+	private String cnpjCompleto;
 	private StatusLotesEventosEnum status;
 	private String xmlLote;
 	private String xmlRetornoLote;
@@ -62,10 +62,10 @@ public class UBILotesEsocial {
 	public void setXmlLote(String xmlLote) {
 		this.xmlLote = xmlLote;
 	}
-	public Long getCnpjCompleto() {
+	public String getCnpjCompleto() {
 		return cnpjCompleto;
 	}
-	public void setCnpjCompleto(Long cnpjCompleto) {
+	public void setCnpjCompleto(String cnpjCompleto) {
 		this.cnpjCompleto = cnpjCompleto;
 	}
 }

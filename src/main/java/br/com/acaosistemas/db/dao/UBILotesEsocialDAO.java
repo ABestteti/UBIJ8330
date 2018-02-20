@@ -59,7 +59,7 @@ public class UBILotesEsocialDAO {
 			while (rs.next()) {
 				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
 				uble.setUbcaCnpj(rs.getLong("ubca_cnpj"));
-				uble.setCnpjCompleto(rs.getLong("cnpj_completo"));
+				uble.setCnpjCompleto(rs.getString("cnpj_completo"));
 				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
 				uble.setTipoAmbiente(LotesTipoAmbienteEnum.getById(rs.getInt("tipo_ambiente")));
 				uble.setXmlLote(rs.getNString("xml"));
@@ -106,7 +106,7 @@ public class UBILotesEsocialDAO {
 				
 				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
 				uble.setUbcaCnpj(rs.getLong("ubca_cnpj"));
-				uble.setCnpjCompleto(rs.getLong("cnpj_completo"));
+				uble.setCnpjCompleto(rs.getString("cnpj_completo"));
 				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
 				uble.setTipoAmbiente(LotesTipoAmbienteEnum.getById(rs.getInt("tipo_ambiente")));
 				uble.setXmlLote(rs.getNString("xml"));

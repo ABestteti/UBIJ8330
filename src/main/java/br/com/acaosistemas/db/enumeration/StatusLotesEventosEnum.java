@@ -21,7 +21,13 @@ public enum StatusLotesEventosEnum implements BaseEnum<Integer> {
      * de assinatura de evento.
      * {@value 299}
      */
-    ERRO_ENVIO_IRRECUPERAVEL(299, "Erro no envio do lote de eventos para o eSocial - irrecuperável"),
+    ERRO_ENVIO_IRRECUPERAVEL(299, "Erro no envio do lote de eventos para o eSocial - irrecuperavel"),
+    
+    /**
+     * Indica que o lote de eventos pronto para ter seus eventos desassociados.
+     * {@value 301}
+     */
+    DESASSOCIACAO_A_DESASSOCIAR(301, "O lote de eventos pronto para ter seus eventos desassociados."),
     
     /**
      * Indica que o lote esta pronto para ser consultado no eSocial.
@@ -39,7 +45,7 @@ public enum StatusLotesEventosEnum implements BaseEnum<Integer> {
      * Indica que houve um erro na consultado do lote de eventos no eSocial
      * {@value 599}
      */
-    ERRO_CONSULTA_IRRECUPERAVEL(599, "Erro na consulta do lote de eventos no eSocial - irrecuperável");
+    ERRO_CONSULTA_IRRECUPERAVEL(599, "Erro na consulta do lote de eventos no eSocial - irrecuperavel");
 
     private Integer id;
     private String descricao;
