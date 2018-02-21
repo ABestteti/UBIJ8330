@@ -8,11 +8,9 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 public class ConnectionFactory {
 
-	// Get the PoolDataSource for UCP
-	// PoolDataSource pds = PoolDataSourceFactory.getPoolDataSource();
+	// Obtem um PoolDataSource do UCP
 	static PoolDataSource pds = null;
 
-	// static OracleDataSource orclDS = null;
 	static OracleConnection connDB = null;
 
 	public OracleConnection getConnection() {
@@ -28,7 +26,7 @@ public class ConnectionFactory {
 				pds.setUser(DBConnectionInfo.getDbUserName());
 				pds.setPassword(DBConnectionInfo.getDbPassWord());
 
-				// Definie propriedades do pool de conexao do banco Oracle
+				// Define as propriedades do pool de conexao do banco Oracle
 				pds.setConnectionPoolName("JDBC_UCP_POOL");
 				pds.setInitialPoolSize(1);
 				pds.setMinPoolSize(1);
