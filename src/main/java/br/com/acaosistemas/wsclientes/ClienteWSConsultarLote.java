@@ -7,6 +7,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
+import br.com.acaosistemas.db.enumeration.LotesTipoAmbienteEnum;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
@@ -31,33 +32,34 @@ public class ClienteWSConsultarLote {
 	public void execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
 		String wsEndPoint;
-		String portaCNPJ;
+		String portaWFAmbiente = null;
 		
 		UBIRuntimesDAO runtimeDAO  = new UBIRuntimesDAO();
 		
-		wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");
-		
-		if (runtimeDAO.runtimeIdExists("PORTACNPJ")) {
-			// Recupera do banco de dados a informação do runtime que identifica
-			// a porta HTTP do web service do UBI para iniciar o processo de
-			// envio de lote de eventos, especifíco para o CNPJ em questão.
-			// Essa é uma solução de contorno para o problema com a troca de
-			// certificado, quando muda o CNPJ do lote de eventos, por conta 
-			// do cache criado pelo Apache CXF no WildFly.
-			portaCNPJ = runtimeDAO.getRuntimeValue("PORTA".concat(pUbleRow.getUbcaCnpj().toString().trim()));
+		// Recupera do banco de dados a informacao do runtime UBIWSENVIALOTE
+	    wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSCONSULTALOTE");			
 
+	    if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO) {
+	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODUCAO")) {
+	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODUCAO");
+	    	}
+	    } else if (pUbleRow.getTipoAmbiente() == LotesTipoAmbienteEnum.PRODUCAO_RESTRITA) {
+	    	if (runtimeDAO.runtimeIdExists("PORTAWFPRODRESTRITA")) {
+	    		portaWFAmbiente = runtimeDAO.getRuntimeValue("PORTAWFPRODRESTRITA");
+	    	}	    	
+	    }
+
+	    if (portaWFAmbiente != null) {
 			// Substitui a porta definida na URL do runtime UBIWSCONSULTALOTE pela
-			// porta definida pelo runtime do CNPJ em processamento. 
+			// porta definida para a instância do WilFly usado para produção restrita 
+	    	// do eSocial, ou a porta definida para a instância do WildFly usado para 
+	    	// produção do eSocial. 
 			// Para tanto, é usada a expressão regular "(?<port>:\\d+)"
 			// que faz o match pelo grupo <port> seguido de um ou mais dígitos
 			// "\\d+"
-			wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaCNPJ));
-		}
+    		wsEndPoint = wsEndPoint.replaceFirst("(?<port>:\\d+)", ":".concat(portaWFAmbiente));
+	    }
 		
-		// Fecha a conexao com o banco de dados
-		runtimeDAO.closeConnection();
-		
-
 		// Monta o parametro de chamada do web service
 		parametros  = pUbleRow.getUbiLoteNumero().toString();
 		
@@ -77,17 +79,17 @@ public class ClienteWSConsultarLote {
 			
 			if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
 			    if (request.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-				    throw new MalformedURLException("CÃ³digo HTTP retornado: " + 
+				    throw new MalformedURLException("Codigo HTTP retornado: " + 
 			                                        request.getResponseCode() + 
 			                                        " [" + wsEndPoint + "]\n" +
-			                                        "ParÃ¢metros: "            + 
+			                                        "Parametros: "            + 
 			                                        parametros);
 			    }
 			    else {
-			    	    throw new IOException("CÃ³digo HTTP retornado: "     + 
+			    	    throw new IOException("Codigo HTTP retornado: "     + 
 			                              request.getResponseCode() + 
 			                              " [" + wsEndPoint + "]\n" +
-			                              "ParÃ¢metros: "            +
+			                              "Parametros: "            +
 			                              parametros);
 			    }
 			}

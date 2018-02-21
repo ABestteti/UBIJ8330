@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
+import br.com.acaosistemas.db.enumeration.LotesTipoAmbienteEnum;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 
@@ -22,13 +23,13 @@ public class UBILotesEsocialDAO {
 		conn = new ConnectionFactory().getConnection();
 	}
 	
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public UBILotesEsocial getUBILotesEsocial(String pRowID ) {
 		uble = new UBILotesEsocial();
@@ -37,7 +38,19 @@ public class UBILotesEsocialDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT uble.ubi_lote_numero,uble.ubca_cnpj,uble.status FROM ubi_lotes_esocial uble WHERE uble.rowid = ?");
+					  "SELECT "
+					+ "   uble.ubi_lote_numero,"
+					+ "   uble.ubca_cnpj,"
+					+ "   ubca.cnpj_completo "
+					+ "   uble.status,"
+					+ "   uble.tipo_ambiente,"
+					+ "   uble.xml"
+					+ "FROM "
+					+ "   ubi_lotes_esocial uble, "
+					+ "   ubi_cnpj_autorizados ubca "
+					+ "WHERE "
+					+ "   uble.rowid = ? and "
+					+ "   ubca.cnpj  = uble.ubca_cnpj");
 			
 			stmt.setString(1, pRowID);
 			
@@ -46,12 +59,21 @@ public class UBILotesEsocialDAO {
 			while (rs.next()) {
 				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
 				uble.setUbcaCnpj(rs.getLong("ubca_cnpj"));
+				uble.setCnpjCompleto(rs.getString("cnpj_completo"));
 				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
+				uble.setTipoAmbiente(LotesTipoAmbienteEnum.getById(rs.getInt("tipo_ambiente")));
+				uble.setXmlLote(rs.getNString("xml"));
 				uble.setRowId(pRowID);
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}		
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return uble;
 	}
@@ -62,7 +84,18 @@ public class UBILotesEsocialDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT uble.ubi_lote_numero,ubca_cnpj,uble.status,uble.rowid FROM ubi_lotes_esocial uble WHERE uble.status = ?");
+					  "SELECT "
+					+ "   uble.ubi_lote_numero,"
+					+ "   ubca_cnpj,"
+					+ "   ubca.cnpj_completo,"
+					+ "   uble.status,"
+					+ "   uble.tipo_ambiente,"
+					+ "   uble.xml,"
+					+ "   uble.rowid "
+					+ "FROM "
+					+ "   ubi_lotes_esocial uble,"
+					+ "   ubi_cnpj_autorizados ubca "
+					+ "WHERE uble.status = ? and ubca.cnpj = uble.ubca_cnpj");
 			
 			stmt.setInt(1, pStatus.getId());
 			
@@ -73,14 +106,24 @@ public class UBILotesEsocialDAO {
 				
 				uble.setUbiLoteNumero(rs.getLong("ubi_lote_numero"));
 				uble.setUbcaCnpj(rs.getLong("ubca_cnpj"));
+				uble.setCnpjCompleto(rs.getString("cnpj_completo"));
 				uble.setStatus(StatusLotesEventosEnum.getById(rs.getInt("status")));
+				uble.setTipoAmbiente(LotesTipoAmbienteEnum.getById(rs.getInt("tipo_ambiente")));
+				uble.setXmlLote(rs.getNString("xml"));
 				uble.setRowId(rs.getString("rowId"));
 				
 				listaUBILotesEsocial.add(uble);
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		return listaUBILotesEsocial;
 	}
 	
@@ -89,7 +132,12 @@ public class UBILotesEsocialDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"UPDATE ubi_lotes_esocial uble SET uble.status = ? WHERE uble.rowid = ?");
+					  "UPDATE "
+					+ "   ubi_lotes_esocial uble "
+					+ "SET "
+					+ "   uble.status = ? "
+					+ "WHERE "
+					+ "   uble.rowid = ?");
 		
 			stmt.setInt(1, pUbleRow.getStatus().getId());
 			stmt.setString(2, pUbleRow.getRowId());
@@ -99,7 +147,13 @@ public class UBILotesEsocialDAO {
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}		
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void updateXmlRetornoLote(UBILotesEsocial pUbleRow) {
@@ -108,7 +162,12 @@ public class UBILotesEsocialDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"UPDATE ubi_lotes_esocial uble SET uble.xml_retorno_lote = ? WHERE uble.rowid = ?");
+					  "UPDATE "
+					+ "   ubi_lotes_esocial uble "
+					+ "SET "
+					+ "   uble.xml_retorno_lote = ? "
+					+ "WHERE "
+					+ "   uble.rowid = ?");
 		
 			stmt.setCharacterStream(1, readerXmlRetornoLote, pUbleRow.getXmlRetornoLote().length());
 			stmt.setString(2, pUbleRow.getRowId());
@@ -118,6 +177,12 @@ public class UBILotesEsocialDAO {
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}		
+		}  finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

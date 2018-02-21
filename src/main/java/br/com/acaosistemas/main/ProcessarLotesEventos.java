@@ -12,9 +12,11 @@ import br.com.acaosistemas.db.dao.UBILotesEsocialLogDAO;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 import br.com.acaosistemas.db.model.UBILotesEsocialLog;
+import br.com.acaosistemas.frw.util.CnpjTransmissorException;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSConsultarLote;
 import br.com.acaosistemas.wsclientes.ClienteWSEnviarLote;
+import br.com.acaosistemas.xml.XMLUtils;
 
 /**
  * 
@@ -50,6 +52,15 @@ public class ProcessarLotesEventos {
 			System.out.println("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
 				
 			try {
+				
+				// Valida a tag <nrInsc> do grupo <ideTransmissor> do lote de
+				// eventos do eSocial. Caso a validacao falhar, ous seja, o CNPJ do
+				// ideTransmissor seja diferente do CNPJ completo, a excecao 
+				// CnpjTransmissorException sera invocada.
+				XMLUtils.validaCnpTransmissor(
+						ubleRow.getXmlLote(),
+						ubleRow.getCnpjCompleto());
+				
 				xmlRetornoLote = clientWS.execWebService(ubleRow);
 				
 				// Atualiza o status da tabela UBI_LOTES_ESOCIAL para
@@ -71,8 +82,13 @@ public class ProcessarLotesEventos {
 				
 				UBILotesEsocialLogDAO ubllDAO = new UBILotesEsocialLogDAO();				
 				ubllDAO.insert(ubll);
-				ubllDAO.closeConnection();
-				
+			
+			} catch (CnpjTransmissorException e) {
+				// O CNPJ do ideTransmissor diverge do CNPJ completo do cadastro de CNPJ
+				// autorizado. Sendo assim, o lote criado devera ser descartado para criar
+				// um novo lote com o ideTransmissor correto.
+				ubleRow.setStatus(StatusLotesEventosEnum.DESASSOCIACAO_A_DESASSOCIAR);
+				gravaExcecaoLog(ubleRow, e);
 			} catch (MalformedURLException e) {
 				// Caso a chamada do web service do correio retornar a excecao
 				// MalformedURLException, faz a atualizacao do status com o
@@ -94,12 +110,12 @@ public class ProcessarLotesEventos {
 			}
 		}
 		
-		ubleDAO.closeConnection();
 		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Envio].");
 	}
 	
 	/**
-	 * Processa todos os lotes que estejam com status A_CONSULTAR (501)
+	 * Processa todos os lotes que estejam com status A_CONSULTAR (501) 
+	 * {@link StatusLotesEventosEnum}
 	 */
 	public void lerLotesProntosConsulta() {
 		ClienteWSConsultarLote clientWS            = new ClienteWSConsultarLote();
@@ -134,7 +150,6 @@ public class ProcessarLotesEventos {
 				
 				UBILotesEsocialLogDAO ubllDAO = new UBILotesEsocialLogDAO();				
 				ubllDAO.insert(ubll);
-				ubllDAO.closeConnection();
 				
 			} catch (MalformedURLException e) {
 				// Caso a chamada do web service do correio retornar a excecao
@@ -157,7 +172,6 @@ public class ProcessarLotesEventos {
 			}
 		}
 		
-		ubleDAO.closeConnection();
 		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Consulta].");
 	}
 	
@@ -191,6 +205,5 @@ public class ProcessarLotesEventos {
 		ubll.setNumErro(new Long(pUbleRow.getStatus().getId()));
 		
 		ubllDAO.insert(ubll);
-		ubllDAO.closeConnection();		
 	}
 }
