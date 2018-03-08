@@ -5,6 +5,12 @@ import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 
 /**
  * Entidade representando tabela UBI_LOTES_ESOCIAL
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Implementado metodo toString().
  *
  * @author Anderson Bestteti Santos
  */
@@ -67,5 +73,10 @@ public class UBILotesEsocial {
 	}
 	public void setCnpjCompleto(String cnpjCompleto) {
 		this.cnpjCompleto = cnpjCompleto;
+	}
+	@Override
+	public String toString() {
+		return "UBILotesEsocial [ubiLoteNumero=" + ubiLoteNumero + ", ubcaCnpj=" + ubcaCnpj + ", cnpjCompleto="
+				+ cnpjCompleto + ", status=" + status + ", rowId=" + rowId + ", tipoAmbiente=" + tipoAmbiente + "]";
 	}
 }

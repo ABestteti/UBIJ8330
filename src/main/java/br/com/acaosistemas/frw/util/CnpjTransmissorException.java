@@ -6,7 +6,13 @@ package br.com.acaosistemas.frw.util;
  * associado ao lote de eventos do UBI.  Caso seja diferente, o programa devera passar o 
  * lote para estados de "Desassociar Eventos" e logar essa ocorrencia no log da tabela 
  * de lotes do eSocial.
- * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Implementado metodo toString().
+ *
  * @author Anderson Bestteti
  *
  */

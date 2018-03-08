@@ -8,28 +8,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.enumeration.LotesTipoAmbienteEnum;
 import br.com.acaosistemas.db.enumeration.StatusLotesEventosEnum;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
 
-
+/**
+ * DAO para manipulacao da tabela UBI_LOTES_ESOCIAL
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Adicionado sistema de log com a biblioteca log4j2.
+ *                  
+ * @author Anderson Bestteti Santos
+ *
+ */
 public class UBILotesEsocialDAO {
 
+	private static final Logger logger = LogManager.getLogger(UBILotesEsocialDAO.class);
+	
 	private Connection      conn;
 	private UBILotesEsocial uble;
 	
 	public UBILotesEsocialDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
-	
-//	public void closeConnection () {
-//		try {
-//			conn.close();
-//		} catch (SQLException e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
 	
 	public UBILotesEsocial getUBILotesEsocial(String pRowID ) {
 		uble = new UBILotesEsocial();
@@ -71,7 +79,7 @@ public class UBILotesEsocialDAO {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 		
@@ -120,7 +128,7 @@ public class UBILotesEsocialDAO {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 		
@@ -151,7 +159,7 @@ public class UBILotesEsocialDAO {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 	}
@@ -181,7 +189,7 @@ public class UBILotesEsocialDAO {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 	}

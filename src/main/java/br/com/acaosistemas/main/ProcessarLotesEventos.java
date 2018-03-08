@@ -75,7 +75,7 @@ public class ProcessarLotesEventos {
 				
 				// Insere no log o resultado da chamada do web service
 				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());
-				ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
+				ubll.setDtMov(new java.sql.Date(new java.util.Date().getTime()));
 				ubll.setMensagem(StatusLotesEventosEnum.ENVIADO_COM_SUCESSO.getDescricao());
 				ubll.setStatus(StatusLotesEventosEnum.ENVIADO_COM_SUCESSO);
 				ubll.setNumErro(0L);
@@ -143,7 +143,7 @@ public class ProcessarLotesEventos {
 				
 				// Insere no log o resultado da chamada do web service
 				ubll.setUbleUbiLoteNumero(ubleRow.getUbiLoteNumero());
-				ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
+				ubll.setDtMov(new java.sql.Date(new java.util.Date().getTime()));
 				ubll.setMensagem(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO.getDescricao());
 				ubll.setStatus(StatusLotesEventosEnum.CONSULTADO_COM_SUCESSO);
 				ubll.setNumErro(0L);
@@ -195,7 +195,7 @@ public class ProcessarLotesEventos {
 		UBILotesEsocialLog    ubll    = new UBILotesEsocialLog();
 		
 		ubll.setUbleUbiLoteNumero(pUbleRow.getUbiLoteNumero());
-		ubll.setDtMov(new Timestamp(System.currentTimeMillis()));
+		ubll.setDtMov(new java.sql.Date(new java.util.Date().getTime()));
 		ubll.setStatus(pUbleRow.getStatus());
 		ubll.setMensagem(pUbleRow.getStatus().getDescricao() +
 				        "\n"                                 +
