@@ -10,7 +10,7 @@ import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 /**
- * Classe reponsavel estabelecer a conexao com o banco Oracleo.
+ * Classe reponsavel estabelecer a conexao com o banco Oracle.
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
  * <p>
@@ -50,12 +50,14 @@ public class ConnectionFactory {
 		           	// Cria uma conexao com o banco Oracle
 	        		connDB = (OracleConnection) pds.getConnection();
 	        		
-	        		logger.info(  "Conectado ao banco " 
-	        		            + DBConnectionInfo.getDbStrConnect()
-	        		            + " com sucesso.");
+	        		logger.info(  "Conectado ao banco "
+        				        + DBConnectionInfo.getDbUserName()
+        				        + "@"
+        				        + DBConnectionInfo.getDbStrConnect()
+        		                + " com sucesso.");
 	        	}
 	        } catch (SQLException e) {
-	            logger.fatal(  "\nErro durante a conexo com o banco de dados.\n"
+	            logger.fatal(  "\nErro durante a conexao com o banco de dados.\n"
 	                         + "Revise se os parametros usuario, senha e string\n"
 	            	         + "de conexao estao corretos, ou se existe algum problema com a rede.",
 	            	        e);

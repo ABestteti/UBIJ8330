@@ -6,6 +6,9 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.db.enumeration.LotesTipoAmbienteEnum;
 import br.com.acaosistemas.db.model.UBILotesEsocial;
@@ -15,11 +18,20 @@ import br.com.acaosistemas.frw.util.HttpUtils;
 /**
  * Classe de implementacao do metodo de consumo do web service de envio
  * do lote de eventos para o eSocial.
- * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.13 - ABS - Adicionado sistema de log com a biblioteca log4j2.
+ *                  - Implementado JavaDoc.
+ *
  * @author Anderson Bestteti Santos
  *
  */
 public class ClienteWSEnviarLote {
+
+	private static final Logger logger = LogManager.getLogger(ClienteWSEnviarLote.class);
 	
 	public String execWebService(UBILotesEsocial pUbleRow) throws MalformedURLException, IOException {
 		String parametros;
@@ -88,8 +100,8 @@ public class ClienteWSEnviarLote {
 			}
 			else {
 				xmlRetornoLote = HttpUtils.readResponse(request);
-				System.out.println("HTTP code .....: " + request.getResponseMessage());
-				System.out.println("Message from ws: " + xmlRetornoLote + " [" + wsEndPoint + "]");
+				logger.info("HTTP code .....: " + request.getResponseMessage());
+				logger.info("Message from ws: " + xmlRetornoLote + " [" + wsEndPoint + "]");
 			}
 						
 		} catch (MalformedURLException e) {

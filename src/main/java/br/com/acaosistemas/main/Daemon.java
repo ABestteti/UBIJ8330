@@ -3,7 +3,9 @@ package br.com.acaosistemas.main;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
@@ -12,14 +14,23 @@ import br.com.acaosistemas.frw.util.ResetPipe;
 import oracle.jdbc.OracleTypes;
 
 /**
- * 
- * @author Anderson Bestteti Santos
- *
  * Classe de inicializacao do servico de envio e consulta
  * do lote de eventos do eSocial.
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Adicionado sistema de log com a biblioteca log4j2.
+ *                  - Implementado JavaDoc.
+ *
+ * @author Anderson Bestteti Santos
+ *
  */
 public class Daemon {
 
+	private static final Logger logger = LogManager.getLogger(Daemon.class);
+	
 	private static final int STOP_DAEMON             = 1;
 	private static final int CONSULTAR_STATUS        = 2;
 	private static final int CONSULTAR_VERSAO_DAEMON = 3;
@@ -40,12 +51,13 @@ public class Daemon {
 			System.exit(1);
 		}
 		
+		logger.info("\n".concat(Versao.ver()));
+		
 		Daemon procPoboxXml = new Daemon();
 		
 		String dbUserName = args[0];
 		String dbPassWord = args[1];
 		String dbStrConn  = args[2];
-
 		
 		// Salva em memoria as informacoes de conexao com o banco
 		// de dados para posterior uso pela classes DAO.
@@ -87,7 +99,7 @@ public class Daemon {
 		// estejam enfileiradas.
 		ResetPipe.reset(conn, pipeName);
 		
-		System.out.println("Processando registros do lote de eventos...");
+		logger.info("Processando registros do lote de eventos...");
 		
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
@@ -101,6 +113,7 @@ public class Daemon {
             try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e1) {
+				logger.error(e1);
 				throw new RuntimeException(e1);
 			}
             
@@ -121,6 +134,7 @@ public class Daemon {
 				pipeStatus = stmt.getInt(1);
 
 			} catch (SQLException e) {
+				logger.error(e);
 				throw new RuntimeException(e);
 			}
 			
@@ -145,13 +159,13 @@ public class Daemon {
 					pipeConteudo = stmt.getString(2);
 							;
 				} catch (SQLException e) {
+					logger.error(e);
 					throw new RuntimeException(e);
 				}
 
 				switch (pipeCmd) {
 				case CONSULTAR_STATUS:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando status do servico!");
+					logger.info("Recebido comando status do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
 					// pipe de retorno que sera usado para enviar o status
@@ -160,8 +174,7 @@ public class Daemon {
 					statusDaemon(pipeConteudo);
 			     	break;
 				case CONSULTAR_VERSAO_DAEMON:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando versao do servico!");
+					logger.info("Recebido comando versao do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
 					// pipe de retorno que sera usado para enviar a versao
@@ -169,8 +182,7 @@ public class Daemon {
 					versaoDaemon(pipeConteudo);
 			     	break;		
 				case STOP_DAEMON:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando stop do servico!");
+					logger.info("Recebido comando stop do servico!");
 					stopDaemon = true;
 					break;
 				}
@@ -181,6 +193,7 @@ public class Daemon {
 				   stmt.close();
 				}
 			} catch (SQLException e) {
+				logger.error(e);
 				throw new RuntimeException(e) ;
 			}
 			
@@ -199,10 +212,11 @@ public class Daemon {
 			stmt.close();
 	        conn.close();
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e) ;
 		}
 		
-		System.out.println("Servico encerrado por requisicao do usuario.");
+		logger.info("Servico encerrado por requisicao do usuario.");
 		System.exit(0);
 	}
 	
@@ -234,6 +248,7 @@ public class Daemon {
 			stmt.close();
 			
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}	    
 	}
@@ -262,11 +277,13 @@ public class Daemon {
 			
 			stmt.execute();			
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
+				logger.error(e);
 				e.printStackTrace();
 			}			
 		}

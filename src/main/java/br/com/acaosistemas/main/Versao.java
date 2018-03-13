@@ -1,9 +1,15 @@
 package br.com.acaosistemas.main;
 /**
- * 
+ * Classe para retornar a versao do daemon
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Implementado JavaDoc.
+ *
  * @author Anderson Bestteti Santos
  *
- * Classe para retornar a versao do daemon
  */
 public final class Versao {
     

@@ -2,6 +2,19 @@ package br.com.acaosistemas.db.enumeration;
 
 import br.com.acaosistemas.frw.enumeration.BaseEnum;
 
+/**
+ * Enumeracao para representar o tipo de ambiente do eSocial que 
+ * um lote de eventos pertence.
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.13 - ABS - Adiconado JavaDOc.
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
 public enum LotesTipoAmbienteEnum implements BaseEnum<Integer> {
     /**
      * Enumeracao para o ambiente de producao.

@@ -13,6 +13,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -20,11 +22,20 @@ import br.com.acaosistemas.frw.util.CnpjTransmissorException;
 
 /**
  * Classe para fornecer rotinas utilitarias para tratamento de XML.
- * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.13 - ABS - Adicionado sistema de log com a biblioteca log4j2.
+ *                  - Implementado JavaDoc.
+ *
  * @author Anderson Bestteti
  *
  */
 public final class XMLUtils {
+	
+	private static final Logger logger = LogManager.getLogger(XMLUtils.class);
 	
 	/**
 	 * Metodo responsavel por extrair do XML do lote de eventos o CNPJ da empresa resposavel
@@ -63,7 +74,7 @@ public final class XMLUtils {
 					.parse(new ByteArrayInputStream(pXml.toString()
 							.getBytes(StandardCharsets.UTF_8)));
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		
 		// Cria um objeto XPathFactory
@@ -79,7 +90,7 @@ public final class XMLUtils {
             cnpjIdeTransmissor = 
             		(String) expr.evaluate(docXmlLoteEventos, XPathConstants.STRING);
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+        	logger.error(e);
         }
 		
 		/*

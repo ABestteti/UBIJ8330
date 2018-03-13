@@ -3,9 +3,11 @@ package br.com.acaosistemas.main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.com.acaosistemas.db.dao.UBILotesEsocialDAO;
 import br.com.acaosistemas.db.dao.UBILotesEsocialLogDAO;
@@ -19,15 +21,23 @@ import br.com.acaosistemas.wsclientes.ClienteWSEnviarLote;
 import br.com.acaosistemas.xml.XMLUtils;
 
 /**
- * 
- * @author Anderson Bestteti Santos
- *
  * Classe para processar os lotes de eventos do eSocial que estao prontos
  * para serem enviados ou consultados no eSocial.
- * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.13 - ABS - Adicionado sistema de log com a biblioteca log4j2.
+ *                  - Implementado JavaDoc.
+ *
+ * @author Anderson Bestteti Santos
+ *
  */
 public class ProcessarLotesEventos {
 
+	private static final Logger logger = LogManager.getLogger(ProcessarLotesEventos.class);
+	
 	public ProcessarLotesEventos() {
 	}
 
@@ -43,13 +53,12 @@ public class ProcessarLotesEventos {
 		
 		listaUbiLoteEventos = ubleDAO.listUBILotesEsocial(StatusLotesEventosEnum.A_ENVIAR);
 				
-		System.out.println("   Processando registros da UBI_LOTES_ESOCIAL[Envio]...");
+		logger.info("   Processando registros da UBI_LOTES_ESOCIAL[Envio]...");
 		
 		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
 			
-			System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-			System.out.println("     Processando rowId: "+ubleRow.getRowId());
-			System.out.println("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
+			logger.info("     Processando rowId: "+ubleRow.getRowId());
+			logger.info("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
 				
 			try {
 				
@@ -110,7 +119,7 @@ public class ProcessarLotesEventos {
 			}
 		}
 		
-		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Envio].");
+		logger.info("   Finalizado processomento da UBI_LOTES_ESOCIAL[Envio].");
 	}
 	
 	/**
@@ -125,13 +134,12 @@ public class ProcessarLotesEventos {
 		
 		listaUbiLoteEventos = ubleDAO.listUBILotesEsocial(StatusLotesEventosEnum.A_CONSULTAR);
 				
-		System.out.println("   Processando registros da UBI_LOTES_ESOCIAL[Consulta]...");
+		logger.info("   Processando registros da UBI_LOTES_ESOCIAL[Consulta]...");
 		
 		for (UBILotesEsocial ubleRow : listaUbiLoteEventos) {
 			
-			System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-			System.out.println("     Processando rowId: "+ubleRow.getRowId());
-			System.out.println("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
+			logger.info("     Processando rowId: "+ubleRow.getRowId());
+			logger.info("     Numero do lote...: "+ubleRow.getUbiLoteNumero());
 				
 			try {
 				clientWS.execWebService(ubleRow);
@@ -172,7 +180,7 @@ public class ProcessarLotesEventos {
 			}
 		}
 		
-		System.out.println("   Finalizado processomento da UBI_LOTES_ESOCIAL[Consulta].");
+		logger.info("   Finalizado processomento da UBI_LOTES_ESOCIAL[Consulta].");
 	}
 	
 	/**

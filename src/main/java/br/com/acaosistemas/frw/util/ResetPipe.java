@@ -1,21 +1,26 @@
 package br.com.acaosistemas.frw.util;
 
-/**
- * Classe de suporte ao reset do pipe de comunicação do banco de dados.
- * Ela pode ser utilizada para reinicializar o pipe de banco, descartando,
- * dessa forma, todas as mensagens que estejam enfileiradas no canal de 
- * comunicação criado no banco.
- * 
- * @author Anderson Bestteti
- *
- */
-
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import oracle.jdbc.OracleTypes;
 
+/**
+ * Classe de suporte ao reset do pipe de comunicação do banco de dados.
+ * Ela pode ser utilizada para reinicializar o pipe de banco, descartando,
+ * dessa forma, todas as mensagens que estejam enfileiradas no canal de 
+ * comunicação criado no banco.
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.13 - ABS - Implementado JavaDoc.
+ *
+ * @author Anderson Bestteti
+ *
+ */
 public final class ResetPipe {
 
     public static void reset(Connection pConn, String pPipeName) {

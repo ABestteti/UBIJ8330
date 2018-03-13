@@ -10,7 +10,7 @@ import java.io.StringWriter;
  * <p>
  * Alterações:
  * <p>
- * 2018.03.08 - ABS - Implementado metodo toString().
+ * 2018.03.08 - ABS - Implementado JavaDoc.
  *
  * @author Anderson Bestteti Santos
  *

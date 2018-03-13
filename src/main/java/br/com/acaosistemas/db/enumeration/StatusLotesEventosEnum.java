@@ -2,6 +2,19 @@ package br.com.acaosistemas.db.enumeration;
 
 import br.com.acaosistemas.frw.enumeration.BaseEnum;
 
+/**
+ * Enumeracao para representar os status que um lote de eventos
+ * do eSocial pode assumir.
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.12 - ABS - Adiconado JavaDOc.
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
 public enum StatusLotesEventosEnum implements BaseEnum<Integer> {
 	/**
      * Indica que o lote esta pronto para ser enviado para o eSocial.
